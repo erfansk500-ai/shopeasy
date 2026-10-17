@@ -77,8 +77,24 @@ function renderProducts(products) {
 }
 
 // Abhi sirf placeholder. Cart API baad mein banayenge.
-function addToCart(productId) {
-  alert('Cart abhi banana baaki hai. Product ID: ' + productId);
+async function addToCart(productId) {
+  if (!getToken()) {
+    alert('Please login first');
+    window.location.href = '/login.html';
+    return;
+  }
+  const res = await fetch('/api/cart', {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ productId, quantity: 1 })
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    alert(data.error);
+    return;
+  }
+  updateNavbar();
+  alert('Added to cart!');
 }
 
 // Har key par request na jaye, isliye 0.4 second ruk kar bhejte hain
