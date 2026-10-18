@@ -61,10 +61,10 @@ function renderProducts(products) {
 
     return `
       <div class="card">
-        <img src="${escapeHtml(p.image_url || '')}" alt="${escapeHtml(p.name)}">
+        <a href="/product.html?id=${p.id}"><img src="${escapeHtml(p.image_url || '')}" alt="${escapeHtml(p.name)}"></a>
         <div class="card-body">
           <span class="category">${escapeHtml(p.category_name)}</span>
-          <h3>${escapeHtml(p.name)}</h3>
+          <h3><a href="/product.html?id=${p.id}" class="plain-link">${escapeHtml(p.name)}</a></h3>
           <span class="price">₹${p.price}</span>
           ${stockText}
           <button ${p.stock === 0 ? 'disabled' : ''} onclick="addToCart(${p.id})">
