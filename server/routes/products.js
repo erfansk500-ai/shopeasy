@@ -1,3 +1,6 @@
+const auth = require('../middleware/auth');
+const adminOnly = require('../middleware/adminOnly');
+
 const express = require('express');
 const db = require('../db');
 
@@ -59,5 +62,50 @@ router.get('/:id', (req, res) => {
   }
   res.json(product);
 });
+// Validation helper
+function validateProduct(b) {
+  if (!b.name || !b.category_id) return 'Name and category are required';
+  if (isNaN(b.price) || Number(b.price) < 0) return 'Price must be a valid number';
+  if (!Number.isInteger(Number(b.stock)) || Number(b.stock) < 0) return 'Stock must be 0 or more';
+  return null;
+}
 
+// CREATE PRODUCT (admin)
+router.post('/', auth, adminOnly, (req, res) => {
+  const b = req.body;
+  const err = validateProduct(b);
+  if (err) return res.status(400).json({ error: err });
+
+  const result = db
+    .prepare(
+      'INSERT INTO products (category_id, name, description, price, stock, image_url) VALUES (?, ?, ?, ?, ?, ?)'
+    )
+    .run(b.category_id, b.name, b.description || '', b.price, b.stock, b.image_url || '');
+  res.status(201).json({ message: 'Product created', id: result.lastInsertRowid });
+});
+
+// UPDATE PRODUCT (admin). is_active bhi badal sakte hain (reactivate)
+router.put('/:id', auth, adminOnly, (req, res) => {
+  const b = req.body;
+  const err = validateProduct(b);
+  if (err) return res.status(400).json({ error: err });
+
+  const result = db
+    .prepare(
+      'UPDATE products SET category_id = ?, name = ?, description = ?, price = ?, stock = ?, image_url = ?, is_active = ? WHERE id = ?'
+    )
+    .run(
+      b.category_id, b.name, b.description || '', b.price, b.stock,
+      b.image_url || '', b.is_active === 0 ? 0 : 1, req.params.id
+    );
+  if (result.changes === 0) return res.status(404).json({ error: 'Product not found' });
+  res.json({ message: 'Product updated' });
+});
+
+// DELETE = deactivate (admin). Purane orders kharab na hon isliye asli delete nahi
+router.delete('/:id', auth, adminOnly, (req, res) => {
+  const result = db.prepare('UPDATE products SET is_active = 0 WHERE id = ?').run(req.params.id);
+  if (result.changes === 0) return res.status(404).json({ error: 'Product not found' });
+  res.json({ message: 'Product deactivated' });
+});
 module.exports = router;

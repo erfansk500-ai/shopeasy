@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Categories - ShopEasy</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="navbar">
+    <a href="/admin/dashboard.html" class="logo">ShopEasy Admin</a>
+    <nav>
+      <a href="/admin/dashboard.html">Dashboard</a>
+      <a href="/admin/products.html">Products</a>
+      <a href="/admin/categories.html">Categories</a>
+      <a href="/admin/orders.html">Orders</a>
+      <a href="#" id="loginLink">Logout</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Categories</h2>
+    <form id="catForm" class="inline-form">
+      <input type="text" id="catName" placeholder="New category name" required>
+      <button type="submit" class="btn">Add</button>
+    </form>
+    <p id="message"></p>
+    <div id="tableBox"></div>
+  </main>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/admin-common.js"></script>
+  <script src="/js/admin-categories.js"></script>
+</body>
+</html>
