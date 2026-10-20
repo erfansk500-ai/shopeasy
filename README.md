@@ -44,6 +44,67 @@ Built as an internship project using **HTML, CSS, JavaScript, Node.js, Express a
 
 Tables: `users`, `categories`, `products`, `cart_items`, `orders`, `order_items`.
 
+## ER Diagram
+
+```mermaid
+erDiagram
+    CATEGORIES ||--o{ PRODUCTS : "has many"
+    USERS ||--o{ CART_ITEMS : "has many"
+    PRODUCTS ||--o{ CART_ITEMS : "added in"
+    USERS ||--o{ ORDERS : "places"
+    ORDERS ||--o{ ORDER_ITEMS : "contains"
+    PRODUCTS ||--o{ ORDER_ITEMS : "sold as"
+
+    USERS {
+        int id PK
+        text name
+        text email UK
+        text password_hash
+        text role
+        text phone
+        text address
+        datetime created_at
+    }
+    CATEGORIES {
+        int id PK
+        text name UK
+    }
+    PRODUCTS {
+        int id PK
+        int category_id FK
+        text name
+        text description
+        real price
+        int stock
+        text image_url
+        int is_active
+        datetime created_at
+    }
+    CART_ITEMS {
+        int id PK
+        int user_id FK
+        int product_id FK
+        int quantity
+    }
+    ORDERS {
+        int id PK
+        int user_id FK
+        real total_amount
+        text status
+        text shipping_name
+        text shipping_phone
+        text shipping_address
+        text payment_method
+        datetime created_at
+    }
+    ORDER_ITEMS {
+        int id PK
+        int order_id FK
+        int product_id FK
+        int quantity
+        real unit_price
+    }
+```
 Order placement runs inside a **database transaction** (create order, save items, reduce stock, empty cart), so either everything succeeds or nothing changes. Order items store the unit price at the time of purchase.
 
 ## Project Structure
