@@ -95,5 +95,39 @@ router.get('/:id', (req, res) => {
 
   res.json({ order, items });
 });
+// CANCEL ORDER (customer, sirf Placed status mein)
+router.patch('/:id/cancel', (req, res) => {
+  const cancelOrder = db.transaction(() => {
+    const order = db
+      .prepare('SELECT * FROM orders WHERE id = ? AND user_id = ?')
+      .get(req.params.id, req.user.id);
+
+    if (!order) throw new Error('NOT_FOUND');
+    if (order.status !== 'Placed') {
+      throw new Error('Only orders with status Placed can be cancelled');
+    }
+
+    const items = db
+      .prepare('SELECT product_id, quantity FROM order_items WHERE order_id = ?')
+      .all(order.id);
+
+    const restoreStock = db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?');
+    for (const i of items) {
+      restoreStock.run(i.quantity, i.product_id);
+    }
+
+    db.prepare("UPDATE orders SET status = 'Cancelled' WHERE id = ?").run(order.id);
+  });
+
+  try {
+    cancelOrder();
+    res.json({ message: 'Order cancelled and stock restored' });
+  } catch (err) {
+    if (err.message === 'NOT_FOUND') {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.status(400).json({ error: err.message });
+  }
+});
 
 module.exports = router;
