@@ -62,4 +62,23 @@ router.get('/me', auth, (req, res) => {
     .get(req.user.id);
   res.json(user);
 });
+// UPDATE PROFILE
+router.put('/me', auth, (req, res) => {
+  const name = (req.body.name || '').trim();
+  const phone = (req.body.phone || '').trim();
+  const address = (req.body.address || '').trim();
+
+  if (!name) return res.status(400).json({ error: 'Name is required' });
+  if (phone && !/^\d{10}$/.test(phone)) {
+    return res.status(400).json({ error: 'Phone must be 10 digits' });
+  }
+
+  db.prepare('UPDATE users SET name = ?, phone = ?, address = ? WHERE id = ?')
+    .run(name, phone, address, req.user.id);
+
+  const user = db
+    .prepare('SELECT id, name, email, role, phone, address FROM users WHERE id = ?')
+    .get(req.user.id);
+  res.json({ message: 'Profile updated', user });
+});
 module.exports = router;

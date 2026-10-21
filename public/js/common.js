@@ -19,10 +19,19 @@ async function updateNavbar() {
   const loginLink = document.getElementById('loginLink');
   const user = JSON.parse(localStorage.getItem('user') || 'null');
 
-  if (user && loginLink) {
+    if (user && loginLink) {
     loginLink.textContent = 'Logout (' + user.name + ')';
     loginLink.href = '#';
     loginLink.onclick = (e) => { e.preventDefault(); logout(); };
+
+    // Profile link (sirf ek baar jodo)
+    if (!document.getElementById('profileLink') && user.role !== 'admin') {
+      const p = document.createElement('a');
+      p.id = 'profileLink';
+      p.href = '/profile.html';
+      p.textContent = 'Profile';
+      loginLink.parentNode.insertBefore(p, loginLink);
+    }
   }
 
   const countEl = document.getElementById('cartCount');
