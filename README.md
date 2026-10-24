@@ -6,6 +6,15 @@ Built as an internship project using **HTML, CSS, JavaScript, Node.js, Express a
 
 
 
+## Screenshots
+
+| Home | Cart |
+|---|---|
+| ![Home](screenshots/home.png) | ![Cart](screenshots/cart.png) |
+
+| Admin Dashboard | Admin Products |
+|---|---|
+| ![Dashboard](screenshots/admin-dashboard.png) | ![Products](screenshots/admin-products.png) |
 ## Features
 
 **Customer**
