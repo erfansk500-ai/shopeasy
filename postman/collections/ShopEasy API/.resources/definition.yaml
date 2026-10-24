@@ -1,6 +1,0 @@
-$kind: collection
-description: ShopEasy e-commerce REST API. Run "Login (Customer)" and "Login (Admin)" first; tokens are saved automatically.
-variables:
-  baseUrl: http://localhost:3000
-  token: ""
-  adminToken: ""
