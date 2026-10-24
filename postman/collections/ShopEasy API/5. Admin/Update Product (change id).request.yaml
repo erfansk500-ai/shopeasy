@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/api/products/16"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "category_id": 1,
+      "name": "Wireless Mouse",
+      "description": "USB mouse",
+      "price": 599,
+      "stock": 10,
+      "image_url": "",
+      "is_active": 1
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{adminToken}}"
+order: 7000

@@ -1,0 +1,13 @@
+# Use this workspace to collaborate
+workspace:
+  id: c2727984-b4b6-406a-8182-2f212afae133
+
+cloudResources:
+  collections:
+    ../postman/collections/ShopEasy API: b947df78-84c5-4e22-b02f-91d8f783e0ec
+
+# All resources in the `postman/` folder are automatically registered in Local View.
+# Point to additional files outside the `postman/` folder to register them individually. Example:
+#localResources:
+#  collections:
+#    - ../tests/E2E Test Collection/

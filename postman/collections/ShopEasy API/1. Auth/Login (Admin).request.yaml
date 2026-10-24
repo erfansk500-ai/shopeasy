@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/login"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "admin@shopeasy.com",
+      "password": "admin123"
+    }
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status is 200', function () { pm.response.to.have.status(200); });
+      const data = pm.response.json();
+      if (data.token) { pm.collectionVariables.set('adminToken', data.token); }
+    language: text/javascript
+order: 3000
